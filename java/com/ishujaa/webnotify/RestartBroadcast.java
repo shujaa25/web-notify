@@ -1,0 +1,20 @@
+package com.ishujaa.webnotify;
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
+public class RestartBroadcast extends BroadcastReceiver {
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onReceive(Context context, Intent intent) {
+
+        //inform user
+
+        context.startForegroundService(new Intent(context, MyWorkerService.class));
+    }
+}
