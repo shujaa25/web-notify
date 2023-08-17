@@ -13,6 +13,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -67,6 +68,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    private void stopWorkerService(){
+        stopService(new Intent(this, MyWorkerService.class));
     }
 
     private void setServiceLabel(){

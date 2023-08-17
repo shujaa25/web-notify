@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 
 public class DBAccess {
-    private Context context;
+    private final Context context;
     public String TARGET_TABLE_NAME = "target_table";
     public String LOG_TABLE_NAME = "log_table";
     SQLiteOpenHelper sqLiteOpenHelper;
@@ -120,6 +120,8 @@ public class DBAccess {
 
         ArrayList<Target> targets = new ArrayList<>();
 
+        if(cursor.getCount() ==0) return targets;
+
         do{
             Target target = new Target();
             target.setId(Integer.parseInt(cursor.getString(0)));
@@ -134,6 +136,7 @@ public class DBAccess {
             }else target.setEnabled(false);
             targets.add(target);
         }while (cursor.moveToNext());
+
         cursor.close();
         database.close();
         return targets;

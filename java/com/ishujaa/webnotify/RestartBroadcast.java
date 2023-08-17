@@ -12,9 +12,6 @@ public class RestartBroadcast extends BroadcastReceiver {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onReceive(Context context, Intent intent) {
-
-        //inform user
-
         context.startForegroundService(new Intent(context, MyWorkerService.class));
     }
 }

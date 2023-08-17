@@ -26,18 +26,10 @@ import java.util.Random;
 
 public class MyWorkerService extends Service {
 
-    String CHANNEL_ID = "com.ishujaa.web_notify";
-    DBAccess DBAccess;
 
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "WebNotify Channel1";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
+    private DBAccess DBAccess;
+    private MyNotification notification;
+
 
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
@@ -49,15 +41,12 @@ public class MyWorkerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        createNotificationChannel();
-
+        notification = new MyNotification(this);
         DBAccess = new DBAccess(this);
 
         Toast.makeText(this, "WebNotifier service resumed.", Toast.LENGTH_SHORT).show();
 
         new BackScraperAsync(this).execute();
-
-
 
         return START_STICKY;
     }
@@ -65,10 +54,12 @@ public class MyWorkerService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction("restartservice");
-        broadcastIntent.setClass(this, RestartBroadcast.class);
-        this.sendBroadcast(broadcastIntent);
+        if(!destroy){
+            Intent broadcastIntent = new Intent();
+            broadcastIntent.setAction("restartservice");
+            broadcastIntent.setClass(this, RestartBroadcast.class);
+            this.sendBroadcast(broadcastIntent);
+        }
     }
 
     @Nullable
@@ -77,30 +68,6 @@ public class MyWorkerService extends Service {
         return null;
     }
 
-    public int notification_id = new Random().nextInt();
-    public void sendNotification(String title, String text, String url){
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID);
-        builder.setSmallIcon(R.mipmap.ic_launcher);
-        builder.setContentTitle(title);
-        builder.setContentText(text);
-
-        Intent intent;
-        if(url != null){
-            intent = new Intent(this, WebV.class);
-            intent.putExtra("url", url);
-        }else{
-            intent = new Intent(this, MyWorkerService.class);
-        }
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, notification_id,
-                intent, PendingIntent.FLAG_IMMUTABLE);
-
-        builder.setContentIntent(pendingIntent);
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        builder.setAutoCancel(true);
-        notificationManager.notify(notification_id++, builder.build());
-    }
 
     private boolean scrape(Target target){
         if(isNetworkAvailable()){
@@ -115,10 +82,15 @@ public class MyWorkerService extends Service {
                     return true;
                 }
             }catch (Exception e){
-                sendNotification("Error", e.getMessage(), null);
+                notification.postNotification("Error", e.getMessage(), null);
             }
         }
         return false;
+    }
+    private boolean destroy = false;
+    private void stopWorkerService(){
+        destroy = true;
+        stopSelf();
     }
 
     private class BackScraperAsync extends AsyncTask<Void, Void, Void> {
@@ -132,25 +104,32 @@ public class MyWorkerService extends Service {
         @Override
         protected Void doInBackground(Void... voids) {
             Target currentTarget = null;
-            do{
+            do {
 
-                try{
+                try {
                     List<Target> targets = DBAccess.retrieveAllTargets();
-                    for(Target target: targets){
-                        currentTarget = target;
-                        if(target.isEnabled() && scrape(target)){
-                            sendNotification(target.getName(), target.getUrl(), target.getUrl());
+                    if (targets.size() == 0) {
+                        notification.postNotification("No targets found.", "Please add targets", null);
+                        stopWorkerService();
+                        break;
+                    } else {
+                        for (Target target : targets) {
+                            currentTarget = target;
+                            if (target.isEnabled() && scrape(target)) {
+                                notification.postNotification(target.getName(), target.getUrl(), target.getUrl());
+                            }
                         }
+                        new SPHelper(context).writeLastUpdateTime();
+                        Thread.sleep(600000);//10 minutes delay for all.
                     }
-                    new SPHelper(context).writeLastUpdateTime();
-                    Thread.sleep(600000);//10 minutes delay for all.
 
-                }catch (Exception e){
-                    sendNotification("Error", "For "+currentTarget.getName()+" "+
+                } catch (Exception e) {
+                    notification.postNotification("Error", "For " + currentTarget.getName() + " " +
                             e.getMessage(), null);
                 }
 
-            }while (true);
+            } while (true);
+            return null;
         }
     }
 }
