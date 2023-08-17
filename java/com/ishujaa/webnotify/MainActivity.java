@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         lastUpdateView.setText(lastUpdate);
+
     }
 
     @Override

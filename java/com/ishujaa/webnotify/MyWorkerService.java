@@ -27,8 +27,9 @@ import java.util.Random;
 public class MyWorkerService extends Service {
 
 
-    private DBAccess DBAccess;
+    private DBAccess dbAccess;
     private MyNotification notification;
+    private SPHelper spHelper;
 
 
     private boolean isNetworkAvailable() {
@@ -42,7 +43,8 @@ public class MyWorkerService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
         notification = new MyNotification(this);
-        DBAccess = new DBAccess(this);
+        dbAccess = new DBAccess(this);
+        spHelper = new SPHelper(this);
 
         Toast.makeText(this, "WebNotifier service resumed.", Toast.LENGTH_SHORT).show();
 
@@ -77,18 +79,18 @@ public class MyWorkerService extends Service {
                 Elements targetElements = primaryContainer.select(target.getSecondarySelector());
                 String newData = targetElements.html();
                 if(!newData.equals(target.getCurrentData())){
-                    DBAccess.updateTargetData(target.getId(), newData);
+                    dbAccess.updateTargetData(target.getId(), newData);
                     target.setCurrentData(newData);
                     return true;
                 }
             }catch (Exception e){
-                notification.postNotification("Error", e.getMessage(), null);
+                notification.postNotification("Error in "+target.getName(), e.getMessage(), null);
             }
         }
         return false;
     }
-    private boolean destroy = false;
-    private void stopWorkerService(){
+    static boolean destroy = false;
+    void stopWorkerService(){
         destroy = true;
         stopSelf();
     }
@@ -105,22 +107,23 @@ public class MyWorkerService extends Service {
         protected Void doInBackground(Void... voids) {
             Target currentTarget = null;
             do {
-
                 try {
-                    List<Target> targets = DBAccess.retrieveAllTargets();
+                    List<Target> targets = dbAccess.retrieveAllTargets();
                     if (targets.size() == 0) {
                         notification.postNotification("No targets found.", "Please add targets", null);
                         stopWorkerService();
-                        break;
+                        return null;
                     } else {
                         for (Target target : targets) {
                             currentTarget = target;
+
                             if (target.isEnabled() && scrape(target)) {
-                                notification.postNotification(target.getName(), target.getUrl(), target.getUrl());
+                                notification.postNotification(target.getName(),
+                                        target.getCurrentData(), target.getUrl());
                             }
                         }
-                        new SPHelper(context).writeLastUpdateTime();
-                        Thread.sleep(600000);//10 minutes delay for all.
+                        spHelper.writeLastUpdateTime();
+                        Thread.sleep(spHelper.getDelay());
                     }
 
                 } catch (Exception e) {
@@ -129,7 +132,6 @@ public class MyWorkerService extends Service {
                 }
 
             } while (true);
-            return null;
         }
     }
 }

@@ -26,10 +26,9 @@ public class MyNotification {
 
     }
 
-
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "WebNotify Channel1";
+            CharSequence name = "WebNotify Updates";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             NotificationManager notificationManager = context.getSystemService(NotificationManager.class);

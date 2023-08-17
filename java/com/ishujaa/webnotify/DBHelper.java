@@ -8,8 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 public class DBHelper extends SQLiteOpenHelper {
-    private static final String DB_NAME = "scraper";
-    private static final int DB_VERSION = 32;
+    private static final String DB_NAME = "web_notify";
+    private static final int DB_VERSION = 1;
 
     public DBHelper(@Nullable Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -30,7 +30,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        //sqLiteDatabase.execSQL("ALTER TABLE target_table ADD COLUMN enabled BOOLEAN;");
-        //sqLiteDatabase.execSQL("UPDATE target_table SET enabled = true;");
+
     }
 }

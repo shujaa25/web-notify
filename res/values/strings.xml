@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">WebNotify</string>
+
+    <string name="bkp_message">
+        Warning: Each new backup will replace the previous backup (if any), which means that all data that differs from the current database state of the application will be lost. During recovery, the backup file replaces the current database state and data added after the backup will be lost.
+    </string>
 </resources>

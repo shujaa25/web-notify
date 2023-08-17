@@ -42,5 +42,4 @@
         android:layout_height="wrap_content"
         android:id="@+id/last_update_view"/>
 
-
 </LinearLayout>
