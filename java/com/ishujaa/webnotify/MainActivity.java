@@ -10,8 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,10 +21,9 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    ListView targetListView;
-    SQLiteOpenHelper openHelper;
-    TextView serviceStatus;
-    TextView lastUpdateView;
+    private ListView targetListView;
+    private TextView serviceStatus;
+    private TextView lastUpdateView;
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
@@ -41,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
 
         lastUpdateView = findViewById(R.id.last_update_view);
         targetListView = findViewById(R.id.target_list_view);
-        openHelper = new DBHelper(this);
 
         targetListView.setOnItemClickListener((adapterView, view, i, l) -> {
             Intent intent = new Intent(view.getContext(), AddNewTarget.class);
@@ -89,10 +85,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         try{
-            SQLiteDatabase database = openHelper.getReadableDatabase();
-            Cursor cursor = database.query("target_table",
-                    new String[]{"_id, name, enabled"},
-                    null, null, null, null, "enabled ASC");
+            DBAccess DBAccess = new DBAccess(this);
+            Cursor cursor = DBAccess.getTargetNamesCursor();
 
             SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(this,
                     android.R.layout.simple_list_item_1,

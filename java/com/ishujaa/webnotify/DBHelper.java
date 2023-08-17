@@ -33,18 +33,4 @@ public class DBHelper extends SQLiteOpenHelper {
         //sqLiteDatabase.execSQL("ALTER TABLE target_table ADD COLUMN enabled BOOLEAN;");
         //sqLiteDatabase.execSQL("UPDATE target_table SET enabled = true;");
     }
-
-    public void insertRecord(SQLiteDatabase db, String name, String url, String primary_selector,
-                             String secondary_selector, String group_selector,
-                             String data, boolean enabled){
-        ContentValues targetValues = new ContentValues();
-        targetValues.put("name", name);
-        targetValues.put("url", url);
-        targetValues.put("primary_selector", primary_selector);
-        targetValues.put("secondary_selector", secondary_selector);
-        targetValues.put("group_selector", group_selector);
-        targetValues.put("data", data);
-        targetValues.put("enabled", enabled);
-        db.insert("target_table", null, targetValues);
-    }
 }

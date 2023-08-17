@@ -1,10 +1,6 @@
 package com.ishujaa.webnotify;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class AddNewTarget extends AppCompatActivity {
 
+    private DBAccess DBAccess;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +23,7 @@ public class AddNewTarget extends AppCompatActivity {
         boolean isUpdate = intent.getBooleanExtra("update", false);
         int targetId = intent.getIntExtra("targetId", -1);
 
-        SQLiteOpenHelper sqLiteOpenHelper = new DBHelper(this);
+        //SQLiteOpenHelper sqLiteOpenHelper = new DBHelper(this);
 
         EditText editTextName = findViewById(R.id.edit_text_name);
         EditText editTextURL = findViewById(R.id.edit_text_url);
@@ -51,31 +49,23 @@ public class AddNewTarget extends AppCompatActivity {
             }
         });
 
+        DBAccess = new DBAccess(this);
+
         if(isUpdate){
 
             try{
-                SQLiteDatabase database = sqLiteOpenHelper.getReadableDatabase();
-                Cursor cursor = database.query("target_table",
-                        new String[]{"name, url, primary_selector," +
-                                "secondary_selector, group_selector," +
-                                "sleep, data, enabled"}, "_id=?",
-                        new String[]{Integer.toString(targetId)},
-                        null, null, null);
 
-                cursor.moveToFirst();
-                editTextName.setText(cursor.getString(0));
-                editTextURL.setText(cursor.getString(1));
-                editTextPrimarySelector.setText(cursor.getString(2));
-                editTextSecondarySelector.setText(cursor.getString(3));
-                editTextGroupSelector.setText(cursor.getString(4));
-                editTextData.setText(cursor.getString(5));
+                Target target = DBAccess.getTargetFields(targetId);
 
-                if(cursor.getString(6).equals("1")){
-                    enableBox.setChecked(true);
-                }else enableBox.setChecked(false);
+                editTextName.setText(target.getName());
+                editTextURL.setText(target.getUrl());
+                editTextPrimarySelector.setText(target.getPrimarySelector());
+                editTextSecondarySelector.setText(target.getSecondarySelector());
+                editTextGroupSelector.setText(target.getGroupSelector());
+                editTextData.setText(target.getCurrentData());
 
-                cursor.close();
-                database.close();
+                enableBox.setChecked(target.isEnabled());
+
             }catch (Exception e){
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
             }
@@ -89,23 +79,10 @@ public class AddNewTarget extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     try{
-                        SQLiteDatabase database = sqLiteOpenHelper.getWritableDatabase();
-
-                        ContentValues targetValues = new ContentValues();
-                        targetValues.put("name", editTextName.getText().toString());
-                        targetValues.put("url", editTextURL.getText().toString());
-                        targetValues.put("primary_selector",
-                                editTextPrimarySelector.getText().toString());
-                        targetValues.put("secondary_selector",
-                                editTextSecondarySelector.getText().toString());
-                        targetValues.put("group_selector",
-                                editTextGroupSelector.getText().toString());
-                        targetValues.put("data", editTextData.getText().toString());
-                        targetValues.put("enabled", enableBox.isChecked());
-
-                        database.update("target_table", targetValues, "_id=?",
-                                new String[]{String.valueOf(targetId)});
-                        database.close();
+                        DBAccess.updateTargetFields(editTextName.getText().toString(), editTextURL.getText().toString(),
+                                editTextPrimarySelector.getText().toString(), editTextSecondarySelector.getText().toString(),
+                                editTextGroupSelector.getText().toString(), editTextData.getText().toString(),
+                                enableBox.isChecked(), targetId);
                         Toast.makeText(view.getContext(), "Updated Successfully.",
                                 Toast.LENGTH_SHORT).show();
 
@@ -120,11 +97,7 @@ public class AddNewTarget extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     try{
-                        SQLiteDatabase database = sqLiteOpenHelper.getWritableDatabase();
-                        database.delete("target_table", "_id=?",
-                                new String[]{String.valueOf(targetId)});
-
-                        database.close();
+                        DBAccess.deleteTarget(targetId);
                         Toast.makeText(view.getContext(), "Deleted Successfully.",
                                 Toast.LENGTH_SHORT).show();
                         finish();
@@ -140,8 +113,7 @@ public class AddNewTarget extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     try{
-                        SQLiteDatabase database = sqLiteOpenHelper.getWritableDatabase();
-                        new DBHelper(view.getContext()).insertRecord(database,
+                        DBAccess.insertTarget(
                                 editTextName.getText().toString(),
                                 editTextURL.getText().toString(),
                                 editTextPrimarySelector.getText().toString(),
@@ -149,7 +121,7 @@ public class AddNewTarget extends AppCompatActivity {
                                 editTextGroupSelector.getText().toString(),
                                 "initiated",
                                 enableBox.isChecked());
-                        database.close();
+
                         Toast.makeText(view.getContext(), "Inserted Successfully.",
                                 Toast.LENGTH_SHORT).show();
                         finish();

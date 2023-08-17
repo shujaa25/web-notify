@@ -27,7 +27,7 @@ import java.util.Random;
 public class MyWorkerService extends Service {
 
     String CHANNEL_ID = "com.ishujaa.web_notify";
-    DBC dbc;
+    DBAccess DBAccess;
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -51,9 +51,8 @@ public class MyWorkerService extends Service {
         super.onStartCommand(intent, flags, startId);
         createNotificationChannel();
 
-        dbc = new DBC(this);
+        DBAccess = new DBAccess(this);
 
-        //sendNotification("Scraper", "Service started running.", null);
         Toast.makeText(this, "WebNotifier service resumed.", Toast.LENGTH_SHORT).show();
 
         new BackScraperAsync(this).execute();
@@ -111,12 +110,11 @@ public class MyWorkerService extends Service {
                 Elements targetElements = primaryContainer.select(target.getSecondarySelector());
                 String newData = targetElements.html();
                 if(!newData.equals(target.getCurrentData())){
-                    dbc.updateTargetData(target.getId(), newData);
+                    DBAccess.updateTargetData(target.getId(), newData);
                     target.setCurrentData(newData);
                     return true;
                 }
             }catch (Exception e){
-                //dbc.putLog("AsyncTask", e.getMessage());
                 sendNotification("Error", e.getMessage(), null);
             }
         }
@@ -137,7 +135,7 @@ public class MyWorkerService extends Service {
             do{
 
                 try{
-                    List<Target> targets = dbc.retrieveAllTargets();
+                    List<Target> targets = DBAccess.retrieveAllTargets();
                     for(Target target: targets){
                         currentTarget = target;
                         if(target.isEnabled() && scrape(target)){
@@ -148,7 +146,6 @@ public class MyWorkerService extends Service {
                     Thread.sleep(600000);//10 minutes delay for all.
 
                 }catch (Exception e){
-                    //dbc.putLog("AsyncTask", e.getMessage());
                     sendNotification("Error", "For "+currentTarget.getName()+" "+
                             e.getMessage(), null);
                 }
