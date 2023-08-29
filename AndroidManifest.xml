@@ -25,6 +25,8 @@
         <activity
             android:name=".AddNewTarget"
             android:exported="false"
+            android:label="Target"
+            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" />
 
         <receiver
@@ -42,7 +44,8 @@
 
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:label="Web Notify">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

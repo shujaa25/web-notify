@@ -1,10 +1,13 @@
 package com.ishujaa.webnotify;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +16,8 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -26,11 +31,32 @@ public class MainActivity extends AppCompatActivity {
     private TextView serviceStatus;
     private TextView lastUpdateView;
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_add_new) {
+            startActivity(new Intent(this, AddNewTarget.class));
+            return true;
+        }else if(id == R.id.action_set_delay){
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
+        setSupportActionBar(toolbar);
 
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS)
                 != PackageManager.PERMISSION_GRANTED){
@@ -47,10 +73,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
 
         });
-
-        Button addNewTargetButton = findViewById(R.id.btn_add_new_target);
-        addNewTargetButton.setOnClickListener(view -> startActivity(new Intent(view.getContext(),
-                AddNewTarget.class)));
 
         Button buttonStartService = findViewById(R.id.btn_start_service);
         buttonStartService.setOnClickListener(view -> {
