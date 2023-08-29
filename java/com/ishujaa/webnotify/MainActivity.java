@@ -7,7 +7,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
@@ -18,7 +17,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -41,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_add_new) {
-            startActivity(new Intent(this, AddNewTarget.class));
+            startActivity(new Intent(this, AddTargetActivity.class));
             return true;
         }else if(id == R.id.action_set_delay){
 
@@ -67,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         targetListView = findViewById(R.id.target_list_view);
 
         targetListView.setOnItemClickListener((adapterView, view, i, l) -> {
-            Intent intent = new Intent(view.getContext(), AddNewTarget.class);
+            Intent intent = new Intent(view.getContext(), AddTargetActivity.class);
             intent.putExtra("targetId", (int) l);
             intent.putExtra("update", true);
             startActivity(intent);
@@ -128,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
 
         String lastUpdate = "Last Updated: ";
         try {
-            lastUpdate += new SPHelper(this).getLastUpdateTime();;
+            lastUpdate += new SharedPrefHelper(this).getLastUpdateTime();;
         }catch (Exception e){
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }

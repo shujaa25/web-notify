@@ -6,13 +6,13 @@ import android.content.SharedPreferences;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class SPHelper {
+public class SharedPrefHelper {
 
     private final String PREF_FILE_KEY = "com.ishujaa.webnotify.MY_PREFERENCE_FILE_KEY";
     private final String LAST_UPDATE_KEY = "com.ishujaa.webnotify.LAST_UPDATE_KEY";
     private final String DELAY_KEY = "com.ishujaa.webnotify.DELAY";
     private final Context context;
-    SPHelper(Context context){
+    SharedPrefHelper(Context context){
         this.context = context;
     }
 

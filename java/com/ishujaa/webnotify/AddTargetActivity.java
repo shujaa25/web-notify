@@ -12,7 +12,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-public class AddNewTarget extends AppCompatActivity {
+public class AddTargetActivity extends AppCompatActivity {
 
     private DBAccess DBAccess;
 
@@ -48,11 +48,11 @@ public class AddNewTarget extends AppCompatActivity {
         Button buttonOpenURL = findViewById(R.id.open_url_btn);
         buttonOpenURL.setOnClickListener(view -> {
             if(!editTextURL.getText().toString().isEmpty()){
-                Intent intent1 = new Intent(AddNewTarget.this, WebV.class);
+                Intent intent1 = new Intent(AddTargetActivity.this, WebViewActivity.class);
                 intent1.putExtra("url", editTextURL.getText().toString());
                 startActivity(intent1);
             }else{
-                Toast.makeText(AddNewTarget.this, "NO URL", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddTargetActivity.this, "NO URL", Toast.LENGTH_SHORT).show();
             }
         });
 

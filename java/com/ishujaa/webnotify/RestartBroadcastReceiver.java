@@ -7,7 +7,7 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
-public class RestartBroadcast extends BroadcastReceiver {
+public class RestartBroadcastReceiver extends BroadcastReceiver {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override

@@ -1,35 +1,28 @@
 package com.ishujaa.webnotify;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.IBinder;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.util.List;
-import java.util.Random;
 
 public class MyWorkerService extends Service {
 
 
     private DBAccess dbAccess;
-    private MyNotification notification;
-    private SPHelper spHelper;
+    private MyNotificationHelper notification;
+    private SharedPrefHelper sharedPrefHelper;
 
 
     private boolean isNetworkAvailable() {
@@ -42,9 +35,9 @@ public class MyWorkerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        notification = new MyNotification(this);
+        notification = new MyNotificationHelper(this);
         dbAccess = new DBAccess(this);
-        spHelper = new SPHelper(this);
+        sharedPrefHelper = new SharedPrefHelper(this);
 
         Toast.makeText(this, "WebNotifier service resumed.", Toast.LENGTH_SHORT).show();
 
@@ -59,7 +52,7 @@ public class MyWorkerService extends Service {
         if(!destroy){
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction("restartservice");
-            broadcastIntent.setClass(this, RestartBroadcast.class);
+            broadcastIntent.setClass(this, RestartBroadcastReceiver.class);
             this.sendBroadcast(broadcastIntent);
         }
     }
@@ -122,8 +115,8 @@ public class MyWorkerService extends Service {
                                         target.getCurrentData(), target.getUrl());
                             }
                         }
-                        spHelper.writeLastUpdateTime();
-                        Thread.sleep(spHelper.getDelay());
+                        sharedPrefHelper.writeLastUpdateTime();
+                        Thread.sleep(sharedPrefHelper.getDelay());
                     }
 
                 } catch (Exception e) {

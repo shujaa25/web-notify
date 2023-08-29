@@ -19,20 +19,23 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".WebV"
+            android:name=".SetDelayActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WebViewActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".AddNewTarget"
+            android:name=".AddTargetActivity"
             android:exported="false"
             android:label="Target"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" />
 
         <receiver
-            android:name=".RestartBroadcast"
+            android:name=".RestartBroadcastReceiver"
             android:enabled="true"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -48,6 +51,7 @@
             android:label="Web Notify">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

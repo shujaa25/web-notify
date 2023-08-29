@@ -5,22 +5,20 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 
-import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import java.util.Random;
 
-public class MyNotification {
+public class MyNotificationHelper {
     private final String CHANNEL_ID = "com.ishujaa.web_notify";
     private final Context context;
     private int notification_id = new Random().nextInt();
     ;
 
-    MyNotification(Context context) {
+    MyNotificationHelper(Context context) {
         this.context = context;
         createNotificationChannel();
 
@@ -46,7 +44,7 @@ public class MyNotification {
 
         Intent intent;
         if (url != null) {
-            intent = new Intent(context, WebV.class);
+            intent = new Intent(context, WebViewActivity.class);
             intent.putExtra("url", url);
         } else {
             intent = new Intent(context, MyWorkerService.class);
