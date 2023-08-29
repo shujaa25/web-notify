@@ -25,7 +25,9 @@ public class SetDelayActivity extends AppCompatActivity {
 
         TextView currentVal = findViewById(R.id.text_view_current_val);
         sharedPrefHelper = new SharedPrefHelper(this);
-        currentVal.setText("Current Val: "+String.valueOf(sharedPrefHelper.getDelay()));
+        long millis = sharedPrefHelper.getDelay();
+        millis/=60000;
+        currentVal.setText("Current Delay: "+String.valueOf(millis)+" minutes");
     }
 
     public void btnUpdateDelayClick(View view) {
@@ -37,6 +39,7 @@ public class SetDelayActivity extends AppCompatActivity {
         }
         try{
             long newMillis = Integer.parseInt(editTextNewVal.getText().toString());
+            newMillis*=60000;
             sharedPrefHelper.setDelay(newMillis);
             Toast.makeText(this, "Successfully updated.", Toast.LENGTH_SHORT).show();
             finish();
