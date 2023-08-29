@@ -119,6 +119,15 @@ public class AddTargetActivity extends AppCompatActivity {
             insertButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+                    if(editTextName.getText().toString().isEmpty() || editTextURL.getText().toString().isEmpty()||
+                    editTextPrimarySelector.getText().toString().isEmpty() ||
+                            editTextSecondarySelector.getText().toString().isEmpty()){
+                        Toast.makeText(view.getContext(),
+                                "Please enter required fields.", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
                     try{
                         DBAccess.insertTarget(
                                 editTextName.getText().toString(),

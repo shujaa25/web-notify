@@ -31,6 +31,10 @@ public class SetDelayActivity extends AppCompatActivity {
     public void btnUpdateDelayClick(View view) {
         EditText editTextNewVal = findViewById(R.id.edit_text_new_val);
 
+        if(editTextNewVal.getText().toString().isEmpty()){
+            Toast.makeText(this, "Please enter a value.", Toast.LENGTH_LONG).show();
+            return;
+        }
         try{
             long newMillis = Integer.parseInt(editTextNewVal.getText().toString());
             sharedPrefHelper.setDelay(newMillis);

@@ -8,35 +8,45 @@
     android:orientation="vertical">
 
     <include layout="@layout/toolbar"
-        android:id="@+id/toolbar_main"/>
+        android:id="@+id/toolbar_main" />
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="List of Active Targets"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/target_list_view"
+            android:layout_weight="8"
+            android:layout_gravity="top"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:layout_weight="2"
+            android:layout_gravity="bottom">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:text="NO STATUS"
+                android:textColor="@color/teal_200"
+                android:layout_gravity="center"
+                android:id="@+id/service_status"
+                android:gravity="center"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Start Service"
+                android:id="@+id/btn_start_service"/>
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/target_list_view" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:text="NO STATUS"
-        android:textColor="@color/teal_200"
-        android:layout_gravity="center"
-        android:id="@+id/service_status"
-        android:gravity="center"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Start Service"
-        android:id="@+id/btn_start_service"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/last_update_view"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/last_update_view"/>
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>
