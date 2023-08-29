@@ -42,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(this, AddTargetActivity.class));
             return true;
         }else if(id == R.id.action_set_delay){
-
+            startActivity(new Intent(this, SetDelayActivity.class));
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
