@@ -85,8 +85,10 @@ public class AddTargetActivity extends AppCompatActivity {
             updateButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
                     try{
-                        DBAccess.updateTargetFields(editTextName.getText().toString(), editTextURL.getText().toString(),
+                        DBAccess.updateTargetFields(editTextName.getText().toString(),
+                                editTextURL.getText().toString(),
                                 editTextPrimarySelector.getText().toString(), editTextSecondarySelector.getText().toString(),
                                 editTextGroupSelector.getText().toString(), editTextData.getText().toString(),
                                 enableBox.isChecked(), targetId);

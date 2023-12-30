@@ -15,6 +15,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import java.net.SocketTimeoutException;
 import java.util.List;
 
 public class MyWorkerService extends Service {
@@ -76,7 +77,10 @@ public class MyWorkerService extends Service {
                     target.setCurrentData(newData);
                     return true;
                 }
-            }catch (Exception e){
+            }catch (SocketTimeoutException t){
+                //ignore
+            }
+            catch (Exception e){
                 notification.postNotification("Error in "+target.getName(), e.getMessage(), null);
             }
         }

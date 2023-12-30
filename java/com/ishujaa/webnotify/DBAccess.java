@@ -10,9 +10,7 @@ import java.util.ArrayList;
 
 public class DBAccess {
     private final Context context;
-    public String TARGET_TABLE_NAME = "target_table";
-    public String LOG_TABLE_NAME = "log_table";
-    SQLiteOpenHelper sqLiteOpenHelper;
+    private final SQLiteOpenHelper sqLiteOpenHelper;
     DBAccess(Context context){
         this.context = context;
         sqLiteOpenHelper = new DBHelper(context);
@@ -28,7 +26,7 @@ public class DBAccess {
 
     public Target getTargetFields(int targetId) throws Exception{
         SQLiteDatabase database = sqLiteOpenHelper.getReadableDatabase();
-        Cursor cursor = database.query("target_table",
+        Cursor cursor = database.query(DBHelper.TARGET_TABLE_NAME,
                 new String[]{"name, url, primary_selector," +
                         "secondary_selector, group_selector," +
                         "data, enabled"}, "_id=?",
@@ -94,7 +92,7 @@ public class DBAccess {
 
     public void deleteTarget(int targetId){
         SQLiteDatabase database = sqLiteOpenHelper.getWritableDatabase();
-        database.delete("target_table", "_id=?",
+        database.delete(DBHelper.TARGET_TABLE_NAME, "_id=?",
                 new String[]{String.valueOf(targetId)});
 
         database.close();
@@ -104,14 +102,14 @@ public class DBAccess {
         SQLiteDatabase database = sqLiteOpenHelper.getWritableDatabase();
         ContentValues targetValues = new ContentValues();
         targetValues.put("data", data);
-        database.update("target_table", targetValues, "_id=?",
+        database.update(DBHelper.TARGET_TABLE_NAME, targetValues, "_id=?",
                 new String[]{String.valueOf(id)});
         database.close();
     }
 
     public ArrayList<Target> retrieveAllTargets() throws Exception{
         SQLiteDatabase database = sqLiteOpenHelper.getReadableDatabase();
-        Cursor cursor = database.query(TARGET_TABLE_NAME,
+        Cursor cursor = database.query(DBHelper.TARGET_TABLE_NAME,
                 new String[]{"_id, name, url, primary_selector," +
                         "secondary_selector, group_selector," +
                         "data, enabled"}, null, null,
