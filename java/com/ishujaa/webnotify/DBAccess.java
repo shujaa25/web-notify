@@ -28,7 +28,7 @@ public class DBAccess {
         SQLiteDatabase database = sqLiteOpenHelper.getReadableDatabase();
         Cursor cursor = database.query(DBHelper.TARGET_TABLE_NAME,
                 new String[]{"name, url, primary_selector," +
-                        "secondary_selector, group_selector," +
+                        "secondary_selector," +
                         "data, enabled"}, "_id=?",
                 new String[]{Integer.toString(targetId)},
                 null, null, null);
@@ -41,10 +41,9 @@ public class DBAccess {
         target.setUrl(cursor.getString(1));
         target.setPrimarySelector(cursor.getString(2));
         target.setSecondarySelector(cursor.getString(3));
-        target.setGroupSelector(cursor.getString(4));
-        target.setCurrentData(cursor.getString(5));
+        target.setCurrentData(cursor.getString(4));
 
-        if(cursor.getString(6).equals("1")){
+        if(cursor.getString(5).equals("1")){
             target.setEnabled(true);
         }else target.setEnabled(false);
 
@@ -55,7 +54,7 @@ public class DBAccess {
     }
 
     public void insertTarget(String name, String url, String primary_selector,
-                             String secondary_selector, String group_selector,
+                             String secondary_selector,
                              String data, boolean enabled){
         SQLiteDatabase database = sqLiteOpenHelper.getWritableDatabase();
         ContentValues targetValues = new ContentValues();
@@ -63,7 +62,6 @@ public class DBAccess {
         targetValues.put("url", url);
         targetValues.put("primary_selector", primary_selector);
         targetValues.put("secondary_selector", secondary_selector);
-        targetValues.put("group_selector", group_selector);
         targetValues.put("data", data);
         targetValues.put("enabled", enabled);
         database.insert("target_table", null, targetValues);
@@ -72,7 +70,7 @@ public class DBAccess {
     }
 
     public void updateTargetFields(String name, String url, String primary_selector,
-                                   String secondary_selector, String group_selector,
+                                   String secondary_selector,
                                    String data, boolean enabled, int targetId){
         SQLiteDatabase database = sqLiteOpenHelper.getWritableDatabase();
 
@@ -81,7 +79,6 @@ public class DBAccess {
         targetValues.put("url", url);
         targetValues.put("primary_selector", primary_selector);
         targetValues.put("secondary_selector", secondary_selector);
-        targetValues.put("group_selector", group_selector);
         targetValues.put("data", data);
         targetValues.put("enabled", enabled);
 
@@ -111,7 +108,7 @@ public class DBAccess {
         SQLiteDatabase database = sqLiteOpenHelper.getReadableDatabase();
         Cursor cursor = database.query(DBHelper.TARGET_TABLE_NAME,
                 new String[]{"_id, name, url, primary_selector," +
-                        "secondary_selector, group_selector," +
+                        "secondary_selector," +
                         "data, enabled"}, null, null,
                 null, null, null);
         cursor.moveToFirst();
@@ -127,9 +124,8 @@ public class DBAccess {
             target.setUrl(cursor.getString(2));
             target.setPrimarySelector(cursor.getString(3));
             target.setSecondarySelector(cursor.getString(4));
-            target.setGroupSelector(cursor.getString(5));
-            target.setCurrentData(cursor.getString(6));
-            if(cursor.getString(7).equals("1")){
+            target.setCurrentData(cursor.getString(5));
+            if(cursor.getString(6).equals("1")){
                 target.setEnabled(true);
             }else target.setEnabled(false);
             targets.add(target);

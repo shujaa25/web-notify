@@ -25,13 +25,11 @@ public class DBHelper extends SQLiteOpenHelper {
                 "url TEXT NOT NULL," +
                 "primary_selector TEXT NOT NULL," +
                 "secondary_selector TEXT NOT NULL," +
-                "group_selector TEXT," +
                 "data TEXT," +
                 "enabled BOOLEAN);");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
     }
 }

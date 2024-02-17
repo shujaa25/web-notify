@@ -35,7 +35,6 @@ public class AddTargetActivity extends AppCompatActivity {
         EditText editTextName = findViewById(R.id.edit_text_name);
         EditText editTextURL = findViewById(R.id.edit_text_url);
         EditText editTextPrimarySelector = findViewById(R.id.edit_text_primary_selector);
-        EditText editTextGroupSelector = findViewById(R.id.edit_text_group_selector);
         EditText editTextSecondarySelector = findViewById(R.id.edit_text_secondary_selector);
         EditText editTextData = findViewById(R.id.edit_text_data);
 
@@ -68,7 +67,6 @@ public class AddTargetActivity extends AppCompatActivity {
                 editTextURL.setText(target.getUrl());
                 editTextPrimarySelector.setText(target.getPrimarySelector());
                 editTextSecondarySelector.setText(target.getSecondarySelector());
-                editTextGroupSelector.setText(target.getGroupSelector());
                 editTextData.setText(target.getCurrentData());
 
                 enableBox.setChecked(target.isEnabled());
@@ -90,7 +88,7 @@ public class AddTargetActivity extends AppCompatActivity {
                         DBAccess.updateTargetFields(editTextName.getText().toString(),
                                 editTextURL.getText().toString(),
                                 editTextPrimarySelector.getText().toString(), editTextSecondarySelector.getText().toString(),
-                                editTextGroupSelector.getText().toString(), editTextData.getText().toString(),
+                                editTextData.getText().toString(),
                                 enableBox.isChecked(), targetId);
                         Toast.makeText(view.getContext(), "Updated Successfully.",
                                 Toast.LENGTH_SHORT).show();
@@ -136,7 +134,6 @@ public class AddTargetActivity extends AppCompatActivity {
                                 editTextURL.getText().toString(),
                                 editTextPrimarySelector.getText().toString(),
                                 editTextSecondarySelector.getText().toString(),
-                                editTextGroupSelector.getText().toString(),
                                 "initiated",
                                 enableBox.isChecked());
 

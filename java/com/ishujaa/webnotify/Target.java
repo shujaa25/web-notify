@@ -6,7 +6,6 @@ public class Target {
     private String url;
     private String primarySelector;
     private String secondarySelector;
-    private String groupSelector;
     private String currentData;
     private boolean isEnabled;
 
@@ -40,14 +39,6 @@ public class Target {
 
     public void setCurrentData(String currentData) {
         this.currentData = currentData;
-    }
-
-    public String getGroupSelector() {
-        return groupSelector;
-    }
-
-    public void setGroupSelector(String groupSelector) {
-        this.groupSelector = groupSelector;
     }
 
     public String getPrimarySelector() {

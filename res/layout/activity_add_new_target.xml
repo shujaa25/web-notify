@@ -42,12 +42,6 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Group Selector"
-            android:id="@+id/edit_text_group_selector"
-            android:singleLine="true" />
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/edit_text_data"
             android:visibility="gone"
             android:maxHeight="200dp"/>
